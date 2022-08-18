@@ -43,7 +43,7 @@ textsslbn = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="h
 azuretts = drivetts()
 
 
-azuretts.playtts(textsslbn)
+azuretts.playtts(textssl)
 
 # # driver.execute_script("document.getElementById(\"ttsssml\").value = \""+textssl+"\";")
 # print(btnwapper.get_attribute("hidden"))
