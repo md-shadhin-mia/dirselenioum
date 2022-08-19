@@ -53,6 +53,8 @@ def engreji(text):
     ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-GuyNeural"><prosody rate="0%" pitch="0%">"""+text+"""</prosody></voice></speak>"""
     return ssml
 
+
+
 azuretts = drivetts()
 for i in range(1, 8):
     conn.request("GET", "/api/v4/quran/translations/162?verse_key=1%3A"+str(i), payload)
@@ -61,7 +63,10 @@ for i in range(1, 8):
     data = json.loads(res.read().decode("utf-8"))
     text = data["translations"][0]["text"]
     print(text)
+    mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", "out"+str(i)+"mp3"])
     azuretts.playtts(bangla(text))
+    mpegPro.terminate()
+
 
 # 
 # azuretts.playtts(textsslbn)
