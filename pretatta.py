@@ -63,7 +63,7 @@ for i in range(1, 8):
     data = json.loads(res.read().decode("utf-8"))
     text = data["translations"][0]["text"]
     print(text)
-    mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", "out"+str(i)+"mp3"])
+    mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", "out"+str(i)+".mp3"])
     azuretts.playtts(bangla(text))
     mpegPro.terminate()
 
