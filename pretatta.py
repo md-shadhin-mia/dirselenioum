@@ -3,6 +3,14 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+import json
+from subprocess import Popen
+
+import http.client
+
+conn = http.client.HTTPSConnection("api.quran.com")
+
+payload = "{}"
 
 class drivetts:
     def __init__(self) :
@@ -19,7 +27,7 @@ class drivetts:
         self.driver.execute_script("document.getElementById(\"ttsssml\").value =\"\"")
 
     def playtts(self, text):
-        self.driver.execute_script("document.getElementById(\"ttsssml\").value =\"\"")
+        self.driver.execute_script("document.getElementById(\"ttsssml\").value =\'\'")
         self.ssmlfild.send_keys(text)
         self.driver.execute_script("document.getElementById(\"playbtn\").click()")
         while self.btnwapper.get_attribute("hidden")!=None:
@@ -36,14 +44,27 @@ textssl = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="htt
 that is working!
 </prosody></voice></speak>
 """
-textsslbn = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-JennyNeural"><prosody rate="0%" pitch="0%">এটি কাজ করছে</prosody></voice></speak>"""
+textsslbn = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="bn-BD-NabanitaNeural"><prosody rate="0%" pitch="0%">বাংলায় এটি কাজ করে</prosody></voice></speak>"""
 
-
+def bangla(text):
+    ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="bn-BD-PradeepNeural"><prosody rate="0%" pitch="0%">"""+text+"""</prosody></voice></speak>"""
+    return ssml
+def engreji(text):
+    ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-GuyNeural"><prosody rate="0%" pitch="0%">"""+text+"""</prosody></voice></speak>"""
+    return ssml
 
 azuretts = drivetts()
+for i in range(1, 8):
+    conn.request("GET", "/api/v4/quran/translations/162?verse_key=1%3A"+str(i), payload)
 
+    res = conn.getresponse()
+    data = json.loads(res.read().decode("utf-8"))
+    text = data["translations"][0]["text"]
+    print(text)
+    azuretts.playtts(bangla(text))
 
-azuretts.playtts(textssl)
+# 
+# azuretts.playtts(textsslbn)
 
 # # driver.execute_script("document.getElementById(\"ttsssml\").value = \""+textssl+"\";")
 # print(btnwapper.get_attribute("hidden"))
