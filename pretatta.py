@@ -53,19 +53,24 @@ def engreji(text):
     ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-GuyNeural"><prosody rate="0%" pitch="0%">"""+text+"""</prosody></voice></speak>"""
     return ssml
 
-
-
 azuretts = drivetts()
-for i in range(1, 8):
-    conn.request("GET", "/api/v4/quran/translations/162?verse_key=1%3A"+str(i), payload)
-
+for suraId in range(1, 115):
+    conn.request("GET", "/api/v4/chapters/"+str(suraId)+"?language=en", payload)
     res = conn.getresponse()
-    data = json.loads(res.read().decode("utf-8"))
-    text = data["translations"][0]["text"]
-    print(text)
-    mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", "out"+str(i)+".mp3"])
-    azuretts.playtts(bangla(text))
-    mpegPro.terminate()
+    sura = json.loads(res.read().decode("utf-8"))
+    totalVerse = sura["chapter"]["verses_count"]
+    print(totalVerse)
+    suraname = sura["chapter"]["name_simple"]
+    for i in range(1, totalVerse+1):
+        conn.request("GET", "/api/v4/quran/translations/162?verse_key="+str(suraId)+"%3A"+str(i), payload)
+        res = conn.getresponse()
+        data = json.loads(res.read().decode("utf-8"))
+        text = data["translations"][0]["text"]
+        print(text)
+        mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", "\"audio/suraname"+str(i)+".mp3\""])
+        azuretts.playtts(bangla(text))
+        mpegPro.terminate()
+
 
 
 # 
