@@ -64,7 +64,7 @@ for suraId in range(1, 115):
     print(totalVerse)
     suraname = sura["chapter"]["name_simple"]
     for i in range(1, totalVerse+1):
-        filename = "/audio/suraname"+str(i)+".mp3"
+        filename = "/audio/"+suraname+"-"+str(i)+".mp3"
         if not path.exists(filename):
             conn.request("GET", "/api/v4/quran/translations/162?verse_key="+str(suraId)+"%3A"+str(i), payload)
             res = conn.getresponse()
