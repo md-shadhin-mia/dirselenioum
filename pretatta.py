@@ -6,6 +6,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 import json
 from subprocess import Popen
 
+from os import path
+
 import http.client
 
 conn = http.client.HTTPSConnection("api.quran.com")
@@ -62,14 +64,16 @@ for suraId in range(1, 115):
     print(totalVerse)
     suraname = sura["chapter"]["name_simple"]
     for i in range(1, totalVerse+1):
-        conn.request("GET", "/api/v4/quran/translations/162?verse_key="+str(suraId)+"%3A"+str(i), payload)
-        res = conn.getresponse()
-        data = json.loads(res.read().decode("utf-8"))
-        text = data["translations"][0]["text"]
-        print(text)
-        mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", "\"audio/suraname"+str(i)+".mp3\""])
-        azuretts.playtts(bangla(text))
-        mpegPro.terminate()
+        filename = "/audio/suraname"+str(i)+".mp3"
+        if not path.exists(filename):
+            conn.request("GET", "/api/v4/quran/translations/162?verse_key="+str(suraId)+"%3A"+str(i), payload)
+            res = conn.getresponse()
+            data = json.loads(res.read().decode("utf-8"))
+            text = data["translations"][0]["text"]
+            print(text)
+            mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", filename])
+            azuretts.playtts(bangla(text))
+            mpegPro.terminate()
 
 
 
