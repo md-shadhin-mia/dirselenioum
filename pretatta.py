@@ -63,6 +63,7 @@ for suraId in range(1, 115):
     totalVerse = sura["chapter"]["verses_count"]
     print(totalVerse)
     suraname = sura["chapter"]["name_simple"]
+    suraname = suraname.replace(" ", "-")
     for i in range(1, totalVerse+1):
         filename = "/audio/"+suraname+"-"+str(i)+".mp3"
         if not path.exists(filename):
