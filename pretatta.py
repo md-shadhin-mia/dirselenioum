@@ -35,6 +35,9 @@ class drivetts:
         while self.btnwapper.get_attribute("hidden")!=None:
             sleep(0.5)
         print("ending")
+    def refesh(self):
+        self.driver.quit()
+        self.__init__()
 
 
 
@@ -64,6 +67,7 @@ for suraId in range(1, 115):
     print(totalVerse)
     suraname = sura["chapter"]["name_simple"]
     suraname = suraname.replace(" ", "-")
+    trac = 1
     for i in range(1, totalVerse+1):
         filename = "/audio/"+suraname+"-"+str(i)+".mp3"
         if not path.exists(filename):
@@ -75,6 +79,12 @@ for suraId in range(1, 115):
             mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", filename])
             azuretts.playtts(bangla(text))
             mpegPro.terminate()
+            trac+=1
+            if trac%10 == 0:
+                azuretts.refesh()
+
+            
+        
 
 
 
