@@ -1,3 +1,4 @@
+import re
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -75,7 +76,7 @@ for suraId in range(1, 115):
             res = conn.getresponse()
             data = json.loads(res.read().decode("utf-8"))
             text = data["translations"][0]["text"]
-            text= text.replace('য', 'জ')
+            text = re.sub(r"([^্ ])([য])",r"\1"+"জ" ,text)
             print(text)
             mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", filename])
             azuretts.playtts(bangla(text))
