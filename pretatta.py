@@ -76,6 +76,7 @@ for suraId in range(1, 115):
             res = conn.getresponse()
             data = json.loads(res.read().decode("utf-8"))
             text = data["translations"][0]["text"]
+            text = re.sub(r"য়",r"য়" ,text)
             text = re.sub(r"([^্ ])([য])",r"\1"+"জ" ,text)
             print(text)
             mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", filename])
