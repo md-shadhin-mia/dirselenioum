@@ -75,6 +75,7 @@ for suraId in range(1, 115):
             res = conn.getresponse()
             data = json.loads(res.read().decode("utf-8"))
             text = data["translations"][0]["text"]
+            text.replace("য", "জ")
             print(text)
             mpegPro = Popen(["ffmpeg", "-f", "pulse", "-i", "default", filename])
             azuretts.playtts(bangla(text))
