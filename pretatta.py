@@ -53,14 +53,14 @@ that is working!
 textsslbn = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="bn-BD-NabanitaNeural"><prosody rate="0%" pitch="0%">বাংলায় এটি কাজ করে</prosody></voice></speak>"""
 
 def bangla(text):
-    ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="bn-BD-PradeepNeural"><prosody rate="0%" pitch="0%">"""+text+"""</prosody></voice></speak>"""
+    ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="bn-BD-PradeepNeural"><prosody rate="0%" pitch="-10%">"""+text+"""</prosody></voice></speak>"""
     return ssml
 def engreji(text):
-    ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-GuyNeural"><prosody rate="0%" pitch="0%">"""+text+"""</prosody></voice></speak>"""
+    ssml = """<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US"><voice name="en-US-GuyNeural"><prosody rate="0%" pitch="-10%">"""+text+"""</prosody></voice></speak>"""
     return ssml
 
 azuretts = drivetts()
-for suraId in range(1, 115):
+for suraId in range(6, 115):
     conn.request("GET", "/api/v4/chapters/"+str(suraId)+"?language=en", payload)
     res = conn.getresponse()
     sura = json.loads(res.read().decode("utf-8"))
@@ -70,7 +70,7 @@ for suraId in range(1, 115):
     suraname = suraname.replace(" ", "-")
     trac = 1
     for i in range(1, totalVerse+1):
-        filename = "/audio/"+suraname+"-"+str(i)+".mp3"
+        filename = "/audio/"+str(suraId)+suraname+"-"+str(i)+".mp3"
         if not path.exists(filename):
             conn.request("GET", "/api/v4/quran/translations/162?verse_key="+str(suraId)+"%3A"+str(i), payload)
             res = conn.getresponse()
@@ -87,11 +87,7 @@ for suraId in range(1, 115):
                 azuretts.refesh()
 
             
-        
 
-
-
-# 
 # azuretts.playtts(textsslbn)
 
 # # driver.execute_script("document.getElementById(\"ttsssml\").value = \""+textssl+"\";")
