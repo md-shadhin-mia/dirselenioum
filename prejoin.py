@@ -10,7 +10,7 @@ def convDi(value, digit=2):
 apre = input("Enter audio pre: ")
 rag = int(input("Enter Range: ")) 
 suraid = int(input("Enter Sura Id: ")) 
-process = Popen(["ffmpeg","-f", "mp3", "-i", "-", "sura-"+str(suraid)+".mp3"], stdin=subprocess.PIPE)
+process = Popen(["ffmpeg","-f", "mp3", "-i", "-", "/audio/sura-"+str(suraid)+".mp3"], stdin=subprocess.PIPE)
 fin = process.stdin
 for i in range(1, rag+1):
     with open(apre+str(i)+".mp3", "rb") as audio:
