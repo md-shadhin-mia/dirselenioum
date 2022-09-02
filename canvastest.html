@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @font-face {
+            font-family: 'KulminoituvaRegular';
+            src: url("file:///C:/Users/Shadhin/Downloads/script-mt-bold.ttf");
+        }
+    </style>
+</head>
+<body>
+    <canvas id="mytest" height="480" width="620">
+
+    </canvas>
+</body>
+    <script>
+        // let canvas =  document.createElement("canvas");
+        let canvas =  document.getElementById("mytest");
+        const wrapText = (ctx, text, x, y, maxWidth, lineHeight) => {
+            const words = text.split(/[ ,]/);
+            let line = '';
+            for (const [index, w] of words.entries()) {
+                const testLine = line + w + ' ';
+                const metrics = ctx.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && index > 0) {
+                    ctx.fillText(line, x, y);
+                    line = w + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+        canvas.height = 1080;
+        canvas.width = 1920;        
+        const ctx = canvas.getContext('2d');
+
+        var arraybob = []
+
+        var textQ = [];
+
+        function resbob(data){
+            arraybob.push([...(new Uint8Array(data))]);
+            init();
+        }
+        function render(){
+            ctx.clearRect(0,0,1920,1080);
+            ctx.fillStyle = "#152a55"
+            ctx.fillRect(0,0,1920,1080);
+            ctx.fillStyle = "#5cd5cc";
+            ctx.font = 'bold 56px KulminoituvaRegular';
+            wrapText(ctx, textQ.shift(), 100, 50, 1200, 70);
+            canvas.toBlob((blob)=>{
+                    blob.arrayBuffer().then(resbob);
+            });
+        }
+        var isrunning = false;
+        function init(){
+            if(textQ.length !== 0){
+                render();
+                isrunning = true;
+            }else{
+                isrunning = false;
+            }
+        }
+        function setarray(text){
+            textQ.push(text);
+            if(!isrunning)
+                init()
+        }
+
+        function getArray(){
+            const ve = [...arraybob]
+            arraybob = []
+            return ve;
+        }
+
+    </script>
+</html>
