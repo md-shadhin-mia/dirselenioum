@@ -28,9 +28,9 @@ def getDuration(filename):
     output = outer.stdout.read()
     return float(str(output, encoding="utf-8").split("\n")[1].split("=")[1].strip())
 
+server = Popen(["py", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
 driver = webdriver.Firefox()
-server = Popen(["python3", "-m", "http.server", "3080"], stderr=subprocess.PIPE)
-driver.get("http://localhost:3080/canvastest.html")
+driver.get("http://localhost:3000/canvastest.html")
 
 #input from your
 apre = input("Enter audio pre: ")
@@ -49,23 +49,24 @@ for index in range(1,rag+1):
     data = json.loads(res.read().decode("utf-8"))
     # data = "Sura fatiha: "+str(index)
     # request to canvas for genarate image
-    driver.execute_script("setarray(\""+data["verse"]["text_uthmani"]+"\");")
+    datajs = json.dumps([data["verse"]["text_uthmani"],data["verse"]["translations"][0]['text']], data["verse"]["verse_key"])
+    driver.execute_script("setarray(arguments[0]);", datajs)
     # driver.execute_script("setarray(\""+data+"\");")
 
     localfilename = apre+str(index)+".mp3"
-    dymeflename = "https://download.quranicaudio.com/verses/Alafasy/mp3/"+convDi(suraid,3)+convDi(index,3)+".mp3"
+    dymeflename = "https://everyayah.com/data/khalefa_al_tunaiji_64kbps/"+convDi(suraid,3)+convDi(index,3)+".mp3"
 
     # calculate total durations
     totalduraton = getDuration(localfilename)+getDuration(dymeflename)
     # totalduraton = getDuration(localfilename)
     norduration = round(totalduraton,2)
-    extraduration = totalduraton-norduration
+    extraduration = round(totalduraton-norduration, 4)
     totalduraton = norduration
 
     # with open(localfilename, "rb") as audio:
     arabic = Popen(["ffmpeg","-f", "mp3", "-i", dymeflename, "-f", "mp3", "-c:a","copy", "-"], stdout=subprocess.PIPE)
     audioout.stdin.write(arabic.stdout.read())
-    bangla = Popen(["ffmpeg","-f", "mp3", "-i", localfilename, "-ss", str(extraduration+0.5), "-f", "mp3","-"], stdout=subprocess.PIPE)
+    bangla = Popen(["ffmpeg","-f", "mp3", "-i", localfilename, "-ss", str(extraduration), "-f", "mp3","-"], stdout=subprocess.PIPE)
     audioout.stdin.write(bangla.stdout.read())
 
     # write to video file
