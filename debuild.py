@@ -44,7 +44,7 @@ videoout = Popen(["ffmpeg","-f","h264","-i", "-", "-r", "25","-c:v", "copy", vid
 
 
 for index in range(1,rag+1):
-    conn.request("GET",  "/api/v4/verses/by_key/2:255?fields=text_uthmani&translations=161&language=en", payload)
+    conn.request("GET",  "/api/v4/verses/by_key/"+str(suraid)+":"+str(index)+"?fields=text_uthmani&translations=161&language=en", payload)
     res = conn.getresponse()
     data = json.loads(res.read().decode("utf-8"))
     # data = "Sura fatiha: "+str(index)
