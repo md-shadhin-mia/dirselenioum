@@ -69,13 +69,12 @@
             ctx.strokeStyle = 'rgb(35, 31, 32)';
             ctx.miterLimit = 10;
             ctx.fillStyle = 'rgb(48, 48, 48)';
-            ctx.rect(0.500000, -0.500000, 1920.000000, 1080.000000);
+            ctx.rect(0, 0, 1920, 1080);
             ctx.fill();
             ctx.stroke();
             
         // #g20
             ctx.save();
-            ctx.transform(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, -1.000000);
             
         // #polygon8
             ctx.beginPath();
@@ -155,16 +154,16 @@
             ctx.fillStyle = 'rgb(0, 175, 125)';
             ctx.rect(1705.500000, 933.400020, 162.100010, 111.100000);
             ctx.fill();
+            ctx.globalAlpha = 1 ;
         }
 
         function render(){
-            ctx.clearRect(0,0,1920,1080);
-
-            dowabck()
+            ctx.clearRect(0,0, 1920,1080);
+            dowabck();
             ctx.fillStyle = "#ffffff";
             ctx.textAlign = "end";
-            ctx.font = 'bold 54px arabic_quran';
             let textjson = JSON.parse(textQ.shift())
+            ctx.font = 'bold 54px arabic_quran';
             let textw=ctx.measureText(textjson[0]).width;
             ratio = textw / 1700
             lineh = 100
@@ -172,19 +171,30 @@
                 ctx.font = 'bold '+(54-(ratio*2.07))+'px arabic_quran';
                 lineh = 100-(ratio*3.6)
             }
-            console.log("ratio: ", ratio)
+            
             wrapText(ctx, textjson[0], 1850, 140, 1750, lineh);
+
             ctx.textAlign = "center";
-            ctx.font = 'bold 34px bangla_quran'
-            wrapText(ctx, textjson[1], 950, 630, 1600, 35);
+            ctx.font = 'bold 54px arabic_quran';
+            textw=ctx.measureText(textjson[1]).width;
+            ratio = textw / 1700;
+            console.log("ratio: ", ratio)
+            // lineh = 100
+            if(ratio > 3.8){
+                ctx.font = 'bold '+(54-(ratio*1.4))+'px arabic_quran';
+                lineh = 100-(ratio*3.0)
+            }
+            wrapText(ctx, textjson[1], 950, 630, 1600, lineh);
             ctx.textAlign = "start";
             ctx.font = 'bold 54px bangla_quran'
 
             ctx.fillText(textjson[2] || "key", 1720, 1005);
+            ctx.fillText(textjson[3], 70, 56);
             canvas.toBlob((blob)=>{
                     blob.arrayBuffer().then(resbob);
             });
         }
+
         var isrunning = false;
         function init(){
             if(textQ.length !== 0){

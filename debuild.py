@@ -34,8 +34,14 @@ driver.get("http://localhost:3000/canvastest.html")
 
 #input from your
 apre = input("Enter audio pre: ")
-rag = int(input("Enter Range: "))
+
 suraid = int(input("Enter Sura Id: "))
+
+conn.request("GET",  "/api/v4/chapters/"+str(suraid)+"?language=bn", payload)
+res = conn.getresponse()
+surainfo = json.loads(res.read().decode("utf-8"))
+rag = int(surainfo["chapter"]["verses_count"])
+nameing =str(rag)+". "+ surainfo["chapter"]["name_simple"]+" ("+surainfo["chapter"]["translated_name"]["name"]+") "
 #output audio video
 audiofn = "audio-"+str(suraid)+".mp3"
 videofn = "video-"+str(suraid)+".mp4"
@@ -49,7 +55,7 @@ for index in range(1,rag+1):
     data = json.loads(res.read().decode("utf-8"))
     # data = "Sura fatiha: "+str(index)
     # request to canvas for genarate image
-    datajs = json.dumps([data["verse"]["text_uthmani"],data["verse"]["translations"][0]['text']], data["verse"]["verse_key"])
+    datajs = json.dumps([data["verse"]["text_uthmani"], data["verse"]["translations"][0]['text'], data["verse"]["verse_key"], nameing])
     driver.execute_script("setarray(arguments[0]);", datajs)
     # driver.execute_script("setarray(\""+data+"\");")
 
@@ -83,6 +89,8 @@ for index in range(1,rag+1):
 videoout.stdin.close()
 audioout.stdin.close()
 #vido close audio
+
+print("wait for ending ")
 audioout.wait()
 videoout.wait()
 print("final build")
