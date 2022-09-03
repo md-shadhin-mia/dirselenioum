@@ -28,7 +28,7 @@ def getDuration(filename):
     output = outer.stdout.read()
     return float(str(output, encoding="utf-8").split("\n")[1].split("=")[1].strip())
 
-server = Popen(["py", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
+server = Popen(["python3", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
 driver = webdriver.Firefox()
 driver.get("http://localhost:3000/canvastest.html")
 
@@ -41,7 +41,7 @@ conn.request("GET",  "/api/v4/chapters/"+str(suraid)+"?language=bn", payload)
 res = conn.getresponse()
 surainfo = json.loads(res.read().decode("utf-8"))
 rag = int(surainfo["chapter"]["verses_count"])
-nameing =str(rag)+". "+ surainfo["chapter"]["name_simple"]+" ("+surainfo["chapter"]["translated_name"]["name"]+") "
+nameing =str(suraid)+". "+ surainfo["chapter"]["name_simple"]+" ("+surainfo["chapter"]["translated_name"]["name"]+") "
 #output audio video
 audiofn = "audio-"+str(suraid)+".mp3"
 videofn = "video-"+str(suraid)+".mp4"
@@ -49,8 +49,13 @@ audioout = Popen(["ffmpeg","-f", "mp3", "-i", "-", audiofn], stdin=subprocess.PI
 videoout = Popen(["ffmpeg","-f","h264","-i", "-", "-r", "25","-c:v", "copy", videofn], stdin=subprocess.PIPE)
 
 
-for index in range(1,rag+1):
-    conn.request("GET",  "/api/v4/verses/by_key/"+str(suraid)+":"+str(index)+"?fields=text_uthmani&translations=161&language=en", payload)
+for index in range(rag+1):
+    if(index==0):
+        if suraid == 1:
+            continue
+        conn.request("GET",  "/api/v4/verses/by_key/1:1?fields=text_uthmani&translations=161&language=en", payload)
+    else:
+        conn.request("GET",  "/api/v4/verses/by_key/"+str(suraid)+":"+str(index)+"?fields=text_uthmani&translations=161&language=en", payload)
     res = conn.getresponse()
     data = json.loads(res.read().decode("utf-8"))
     # data = "Sura fatiha: "+str(index)
@@ -58,9 +63,14 @@ for index in range(1,rag+1):
     datajs = json.dumps([data["verse"]["text_uthmani"], data["verse"]["translations"][0]['text'], data["verse"]["verse_key"], nameing])
     driver.execute_script("setarray(arguments[0]);", datajs)
     # driver.execute_script("setarray(\""+data+"\");")
-
-    localfilename = apre+str(index)+".mp3"
-    dymeflename = "https://everyayah.com/data/khalefa_al_tunaiji_64kbps/"+convDi(suraid,3)+convDi(index,3)+".mp3"
+    if(index==0):
+        localfilename = "bnbismillah.mp3"
+    else:
+        localfilename = apre+str(index)+".mp3"
+    if(suraid == 1 and index == 1):
+        dymeflename = "bismillah.mp3"
+    else:  
+        dymeflename = "https://everyayah.com/data/khalefa_al_tunaiji_64kbps/"+convDi(suraid,3)+convDi(index,3)+".mp3"
 
     # calculate total durations
     totalduraton = getDuration(localfilename)+getDuration(dymeflename)
