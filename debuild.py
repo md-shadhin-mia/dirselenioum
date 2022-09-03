@@ -26,7 +26,7 @@ def getDuration(filename):
     outer = Popen(args, stdout = subprocess.PIPE, stderr=subprocess.PIPE)
     outer.wait()
     output = outer.stdout.read()
-    return float(str(output, encoding="utf-8").split("FORMAT]")[1].split("=")[1].split("\r")[0])
+    return float(str(output, encoding="utf-8").split("FORMAT]")[1].split("=")[1].split("\n")[0])
 
 server = Popen(["python3", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
 driver = webdriver.Firefox()
