@@ -71,7 +71,9 @@ for index in range(rag+1):
         dymeflename = "bismillah.mp3"
     else:  
         dymeflename = "https://everyayah.com/data/khalefa_al_tunaiji_64kbps/"+convDi(suraid,3)+convDi(index,3)+".mp3"
-
+    
+    if index == 0:
+        dymeflename = "bismillah.mp3"
     # calculate total durations
     totalduraton = getDuration(localfilename)+getDuration(dymeflename)
     # totalduraton = getDuration(localfilename)
