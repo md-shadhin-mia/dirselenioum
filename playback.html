@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="margin: 8px;">
+        <audio id="payer"
+            controls
+            >
+                Your browser does not support the
+                <code>audio</code> element.
+        </audio>
+        
+    </div>
+    <div style="margin: 8px;">
+        <input type="text" id="prefix">
+    </div>
+    <div style="margin: 8px;">
+        <input type="number" id="count" onchange="chage()">
+    </div>
+    <button onclick="previes()">prev</button>
+    <button onclick="playpuse()">Play/Puase</button>
+    <button onclick="nexts()">next</button>
+</body>
+
+
+<script>
+    var cur = 1;
+    var palyer = document.getElementById("payer");
+    var prefix = document.getElementById("prefix");
+    var count = document.getElementById("count");
+  function previes(){
+    cur--;
+    count.value = cur;
+  }
+  function playpuse(){
+    palyer.src = prefix.value+cur+".mp3";
+    palyer.play();
+  }
+  function nexts(){
+    cur++;
+    count.value = cur;
+  }
+
+  function chage(){
+    cur = count.value;
+  }
+</script>
+</html>

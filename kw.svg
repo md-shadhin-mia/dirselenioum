@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 1920 1080" style="enable-background:new 0 0 1920 1080;" xml:space="preserve">
+<!-- <foreignObject xmlns="http://www.w3.org/2000/svg" width="1600" height="440" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="150" y="60" style="&#10;">
+      <p xmlns="http://www.w3.org/1999/xhtml" style="font-size: 2.8em;text-align: right;color:green;">'''+data["verse"]["text_uthmani"]+'''</p>
+    </foreignObject>
+<foreignObject xmlns="http://www.w3.org/2000/svg" width="1600" height="440" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" x="100" y="550">
+      <p xmlns="http://www.w3.org/1999/xhtml" style="font-size: 2.4em;text-align: center;">'''+data["verse"]["translations"][0]["text"]+''' </p>
+    </foreignObject> -->
+    <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+
+</svg>
