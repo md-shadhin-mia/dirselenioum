@@ -53,7 +53,7 @@ for index in range(rag+1):
     if(index==0):
         if suraid == 1:
             continue
-        conn.request("GET",  "/api/v4/verses/by_key/1:1?fields=text_uthmani&translations=161&language=en", payload)
+        conn.request("GET",  "/api/v4/verses/by_key/1:1?fields=text_uthmani&translations=1631&language=en", payload)
     else:
         conn.request("GET",  "/api/v4/verses/by_key/"+str(suraid)+":"+str(index)+"?fields=text_uthmani&translations=161&language=en", payload)
     res = conn.getresponse()

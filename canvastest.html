@@ -143,17 +143,6 @@
             ctx.rect(45.500000, 565.500000, 1780.100000, 443.500000);
             ctx.fill();
             
-        // #rect26
-            ctx.beginPath();
-            ctx.fillStyle = 'rgb(0, 175, 125)';
-            ctx.rect(62.799999, 2.500000, 460.000000, 80.000000);
-            ctx.fill();
-            
-        // #rect28
-            ctx.beginPath();
-            ctx.fillStyle = 'rgb(0, 175, 125)';
-            ctx.rect(1705.500000, 933.400020, 162.100010, 111.100000);
-            ctx.fill();
             ctx.globalAlpha = 1 ;
         }
 
@@ -188,8 +177,25 @@
             ctx.textAlign = "start";
             ctx.font = 'bold 54px bangla_quran'
 
-            ctx.fillText(textjson[2] || "key", 1720, 1005);
-            ctx.fillText(textjson[3], 70, 56);
+            textw=ctx.measureText(textjson[2]).width;
+            ctx.globalAlpha = 0.7;
+            // #rect28
+            ctx.beginPath();
+            ctx.fillStyle = 'rgb(0, 175, 125)';
+            ctx.rect(1705, 933.400020, textw+24, 111.100000);
+            ctx.fill();
+            textw=ctx.measureText(textjson[3]).width;
+            // #rect26
+            ctx.beginPath();
+            ctx.fillStyle = 'rgb(0, 175, 125)';
+            ctx.rect(63, 2.5, textw+24, 80);
+            ctx.fill();
+
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText(textjson[2] , 1720, 1005);
+            ctx.fillText(textjson[3] , 70, 56);
+
             canvas.toBlob((blob)=>{
                     blob.arrayBuffer().then(resbob);
             });
