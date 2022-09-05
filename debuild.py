@@ -28,7 +28,7 @@ def getDuration(filename):
     output = outer.stdout.read()
     return float(str(output, encoding="utf-8").split("FORMAT]")[1].split("=")[1].split("\n")[0])
 
-server = Popen(["python3", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
+server = Popen(["py", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
 driver = webdriver.Firefox()
 driver.get("http://localhost:3000/canvastest.html")
 
@@ -45,7 +45,7 @@ nameing =str(suraid)+". "+ surainfo["chapter"]["name_simple"]+" ("+surainfo["cha
 #output audio video
 audiofn = "audio-"+str(suraid)+".mp3"
 videofn = "video-"+str(suraid)+".mp4"
-audioout = Popen(["ffmpeg","-f", "mp3", "-i", "-", audiofn], stdin=subprocess.PIPE)
+audioout = Popen(["ffmpeg","-f", "mp3", "-i", "-", "-c:a", "copy", audiofn], stdin=subprocess.PIPE)
 videoout = Popen(["ffmpeg","-f","h264","-i", "-", "-r", "25","-c:v", "copy", videofn], stdin=subprocess.PIPE)
 
 
@@ -82,10 +82,8 @@ for index in range(rag+1):
     totalduraton = norduration
 
     # with open(localfilename, "rb") as audio:
-    arabic = Popen(["ffmpeg","-f", "mp3", "-i", dymeflename, "-f", "mp3", "-c:a","copy", "-"], stdout=subprocess.PIPE)
+    arabic = Popen(["ffmpeg", "-i", dymeflename, "-ss", str(extraduration), "-i", localfilename,"-filter_complex", "[0:a][1:a]concat=n=2:v=0:a=1" ,"-f", "mp3", "-"], stdout=subprocess.PIPE)
     audioout.stdin.write(arabic.stdout.read())
-    bangla = Popen(["ffmpeg","-f", "mp3", "-i", localfilename, "-ss", str(extraduration), "-f", "mp3","-"], stdout=subprocess.PIPE)
-    audioout.stdin.write(bangla.stdout.read())
 
     # write to video file
     output = driver.execute_script("return getArray();")
