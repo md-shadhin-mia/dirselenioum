@@ -1,7 +1,9 @@
 
 import json
-import sys
+import math
+import os
 from operator import sub
+from random import randint
 import subprocess
 from subprocess import Popen
 import http.client
@@ -31,6 +33,7 @@ def getDuration(filename):
 server = Popen(["python3", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
 driver = webdriver.Firefox()
 driver.get("http://localhost:3000/canvastest.html")
+tempfilename = "temp-"+str(randint(10000, 99999))+".png"
 
 #input from your
 apre = input("Enter audio pre: ")
@@ -90,10 +93,10 @@ for index in range(rag+1):
     
     print("read image",len(output))
     for out in output:
-        with open("temp.png", "wb") as temp:
+        with open(tempfilename, "wb") as temp:
             temp.write(bytearray(out))
     
-    videloop = Popen(["ffmpeg", "-loop", "1", "-t", str(totalduraton), "-r", "25", "-i", "temp.png", "-vf", "fade=t=in:st=0:d=0.3,fade=t=out:st="+str(totalduraton-0.3)+":d=0.3", "-t", str(totalduraton),  "-f", "h264", "-"],stdout=subprocess.PIPE)
+    videloop = Popen(["ffmpeg", "-loop", "1", "-t", str(totalduraton), "-r", "25", "-i", tempfilename, "-vf", "fade=t=in:st=0:d=0.3,fade=t=out:st="+str(totalduraton-0.3)+":d=0.3", "-t", str(totalduraton),  "-f", "h264", "-"],stdout=subprocess.PIPE)
     videoout.stdin.write(videloop.stdout.read())
 
 videoout.stdin.close()
@@ -106,5 +109,9 @@ videoout.wait()
 print("final build")
 videoOudio = Popen(["ffmpeg", "-r", "25","-i", videofn,"-i", audiofn, "-c:v", "copy", "video-audio-"+str(suraid)+".mp4"])
 videoOudio.wait()
+
+os.remove(tempfilename)
+os.remove(videofn)
+os.remove(audiofn)
 
 server.terminate()
