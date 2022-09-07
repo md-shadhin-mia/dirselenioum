@@ -30,6 +30,21 @@ def getDuration(filename):
     output = outer.stdout.read()
     return float(str(output, encoding="utf-8").split("FORMAT]")[1].split("=")[1].split("\n")[0])
 
+def getFormate(milisec):
+    extra = milisec %  1000
+    milisec = milisec - extra
+    sec = int(milisec / 1000)
+    xsec = sec % 60
+    sec = sec-xsec
+    minit = int(sec / 60)
+    sec = xsec
+    xmin = minit % 60
+    minit = minit - xmin
+    hour = int(minit / 60)
+    minit = xmin
+    return convDi(hour)+":"+convDi(minit)+":"+convDi(sec)+","+str(int(extra))
+
+
 server = Popen(["python3", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
 driver = webdriver.Firefox()
 driver.get("http://localhost:3000/canvastest.html")
@@ -50,20 +65,22 @@ audiofn = "audio-"+str(suraid)+".mp3"
 videofn = "video-"+str(suraid)+".mp4"
 audioout = Popen(["ffmpeg","-f", "mp3", "-i", "-", "-c:a", "copy", audiofn], stdin=subprocess.PIPE)
 videoout = Popen(["ffmpeg","-f","h264","-i", "-", "-r", "25","-c:v", "copy", videofn], stdin=subprocess.PIPE)
-
-
+subtitle = open("/audio/video/subtitle-"+str(suraid)+".srt", "wb")
+subtitlecount = 1
+starttilme = 0
+totalduraton = 0
 for index in range(rag+1):
     if(index==0):
         if suraid == 1:
             continue
-        conn.request("GET",  "/api/v4/verses/by_key/1:1?fields=text_uthmani&translations=163&language=en", payload)
+        conn.request("GET",  "/api/v4/verses/by_key/1:1?fields=text_uthmani&translations=163,131&language=en", payload)
     else:
-        conn.request("GET",  "/api/v4/verses/by_key/"+str(suraid)+":"+str(index)+"?fields=text_uthmani&translations=163&language=en", payload)
+        conn.request("GET",  "/api/v4/verses/by_key/"+str(suraid)+":"+str(index)+"?fields=text_uthmani&translations=163,131&language=en", payload)
     res = conn.getresponse()
     data = json.loads(res.read().decode("utf-8"))
     # data = "Sura fatiha: "+str(index)
     # request to canvas for genarate image
-    datajs = json.dumps([data["verse"]["text_uthmani"], data["verse"]["translations"][0]['text'], data["verse"]["verse_key"], nameing])
+    datajs = json.dumps([data["verse"]["text_uthmani"], data["verse"]["translations"][1]['text'], data["verse"]["verse_key"], nameing])
     driver.execute_script("setarray(arguments[0]);", datajs)
     # driver.execute_script("setarray(\""+data+"\");")
     if(index==0):
@@ -78,7 +95,11 @@ for index in range(rag+1):
     if index == 0:
         dymeflename = "bismillah.mp3"
     # calculate total durations
+    starttilme += totalduraton
     totalduraton = getDuration(localfilename)+getDuration(dymeflename)
+    subtitle.write((str(index)+"\n").encode("utf-8"))
+    subtitle.write((getFormate(starttilme*1000)+" --> "+getFormate((starttilme+totalduraton)*1000)+"\n").encode("utf-8"))
+    subtitle.write((data["verse"]["translations"][0]['text']+"\n\n").encode("utf-8"))
     # totalduraton = getDuration(localfilename)
     norduration = round(totalduraton,2)
     extraduration = round(totalduraton-norduration, 4)
@@ -102,12 +123,12 @@ for index in range(rag+1):
 videoout.stdin.close()
 audioout.stdin.close()
 #vido close audio
-
+subtitle.close()
 print("wait for ending ")
 audioout.wait()
 videoout.wait()
 print("final build")
-videoOudio = Popen(["ffmpeg", "-r", "25","-i", videofn,"-i", audiofn, "-c:v", "copy", "video-audio-"+str(suraid)+".mp4"])
+videoOudio = Popen(["ffmpeg", "-r", "25","-i", videofn,"-i", audiofn, "-c:v", "copy", "/audio/video/video-audio-"+str(suraid)+".mp4"])
 videoOudio.wait()
 
 os.remove(tempfilename)
