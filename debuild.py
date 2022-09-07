@@ -28,7 +28,7 @@ def getDuration(filename):
     output = outer.stdout.read()
     return float(str(output, encoding="utf-8").split("FORMAT]")[1].split("=")[1].split("\n")[0])
 
-server = Popen(["py", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
+server = Popen(["python3", "-m", "http.server", "3000"], stderr=subprocess.PIPE)
 driver = webdriver.Firefox()
 driver.get("http://localhost:3000/canvastest.html")
 
