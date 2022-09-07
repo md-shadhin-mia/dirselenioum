@@ -153,10 +153,11 @@
                 let metrics = ctx.measureText(text);
                 let sizmaxw = metrics.width;
                 let maxlines = sizmaxw/w;
-                let maxh  = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent+16;
+                let maxh  = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
                 let hightmax = maxlines*maxh;
                 if(h>hightmax)
                 {
+                    
                     return {fontsize, maxh}
                 }
                 fontsize--;
@@ -172,15 +173,17 @@
             let textjson = JSON.parse(textQ.shift())
             
             ctx.font = 'bold 54px arabic_quran';
-            let fonth = getfontSizeFrame(textjson[1], 1750, 600, "arabic_quran")
+            let fonth = getfontSizeFrame(textjson[0], 1750, 280, "arabic_quran")
+
             ctx.textAlign = "end";
-            wrapText(ctx, textjson[0], 1850, 160, 1750, fonth.maxh);
+            wrapText(ctx, textjson[0], 1850, 170, 1750, fonth.maxh);
 
             ctx.textAlign = "center";
             ctx.font = 'bold 54px bangla_quran';
             
-            fonth = getfontSizeFrame(textjson[1], 1600, 370, "bangla_quran")
-            wrapText(ctx, textjson[1], 950, 630, 1600, fonth.maxh);
+            fonth = getfontSizeFrame(textjson[1], 1750, 280, "bangla_quran")
+
+            wrapText(ctx, textjson[1], 950, 630, 1750, fonth.maxh);
             ctx.textAlign = "start";
             ctx.font = 'bold 54px bangla_quran'
 
@@ -200,8 +203,8 @@
 
             ctx.globalAlpha = 1;
             ctx.fillStyle = "#ffffff";
-            ctx.fillText(textjson[2] , 1720, 985);
-            ctx.fillText(textjson[3] , 70, 20);
+            ctx.fillText(textjson[2] , 1720, 1000);
+            ctx.fillText(textjson[3] , 70, 35);
 
             canvas.toBlob((blob)=>{
                     blob.arrayBuffer().then(resbob);
