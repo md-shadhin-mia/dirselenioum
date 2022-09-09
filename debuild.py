@@ -106,7 +106,7 @@ for index in range(rag+1):
     totalduraton = norduration
 
     # with open(localfilename, "rb") as audio:
-    arabic = Popen(["ffmpeg", "-i", dymeflename, "-ss", str(extraduration), "-i", localfilename,"-filter_complex", "[0:a][1:a]concat=n=2:v=0:a=1" ,"-f", "mp3", "-"], stdout=subprocess.PIPE)
+    arabic = Popen(["ffmpeg", "-i", dymeflename, "-ss", str(extraduration), "-i", localfilename,"-filter_complex", "[0:a][1:a]concat=n=2:v=0:a=1,loudnorm=I=-6" ,"-f", "mp3", "-"], stdout=subprocess.PIPE)
     audioout.stdin.write(arabic.stdout.read())
 
     # write to video file
