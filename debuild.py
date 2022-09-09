@@ -128,6 +128,7 @@ print("wait for ending ")
 audioout.wait()
 videoout.wait()
 print("final build")
+driver.quit()
 videoOudio = Popen(["ffmpeg", "-r", "25","-i", videofn,"-i", audiofn, "-c:v", "copy", "/audio/video/video-audio-"+str(suraid)+".mp4"])
 videoOudio.wait()
 
